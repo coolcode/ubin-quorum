@@ -4,7 +4,7 @@ var PaymentAgent = artifacts.require("./PaymentAgent.sol");
 var util = require('../util.js');
 var u = require('./test-utils.js');
 let currentNetwork = util.getCurrentNetwork(web3);
-let account = web3.eth.accounts[0]| nodes[0].ethKey;
+let account = web3.eth.accounts[0]|| nodes[0].ethKey;
 console.log("account", account);
 
 let stashName = u.getStashName(nodes, account);
