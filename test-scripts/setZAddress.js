@@ -10,7 +10,7 @@ nodes = u.removeMe(nodes, stashName);
 
 let constellationKeys = u.getValueFromAllNodes(nodes, 'constKey');
 
-let zAddress = '0x1932c48b2bf8102ba33b4a6b545c32236e342f34';
+let zAddress = fs.readFileSync('config/zAddress', 'utf8');//'0x1932c48b2bf8102ba33b4a6b545c32236e342f34';
 
 module.exports = (done) => {
   let paymentAgent = null;
