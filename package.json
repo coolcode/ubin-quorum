@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "compile": "truffle compile",
     "start": "set DEBUG=ubin-rest:* && nodemon --exec \"babel-node\" server/index.js"
   },
   "devDependencies": {
