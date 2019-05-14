@@ -43,7 +43,7 @@ var paContract = web3.eth.contract(pa_compiled["abi"]);
 var pa = paContract.new({
     from: web3.eth.accounts[0],
     data: "0x" + pa_compiled["bytecode"],
-    gas: '1147000000'
+    gas: '804247552'
 }, (e, contract) => {
     if (e) {
         console.log("err creating contract", e);
