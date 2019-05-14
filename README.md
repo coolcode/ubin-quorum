@@ -1,4 +1,4 @@
-# Project Ubin Phase 2 - Quorum
+    # Project Ubin Phase 2 - Quorum
 
 This repository contains the source code and test scripts for the Quorum prototype in Project Ubin Phase 2.
 
