@@ -63,7 +63,7 @@
     "address": "0xf10cf22b3645beea52d0e198dfaa00b86ef70596"
   },
   {
-    "nodeName": "nx010",
+    "nodeName": "nx10",
     "constellationPublicKey": "JJblosOEfHNbKxhK+G3y3Qqdtlboa44Sb4uOp/y35yY=",
     "nodePubKey": "36a216951bbd81860bcd887732192dbb72ca8d2ca79302b0691be5f59e7a5071871a259ea0526f7fabcd76838e5c7551221def3d7841d986e62a9c1bf7ade3b7",
     "rpcPort": 22010,

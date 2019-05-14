@@ -13,19 +13,6 @@
     "localport": 3000
   },
   {
-    "nodeId": 1,
-    "host": "3.216.212.77",
-    "port": 22010,
-    "accountNumber": 0,
-    "ethKey": "0xc46ab8a6787c2c9df6f7baadac6896cc465e06bd",
-    "constKey": "JJblosOEfHNbKxhK+G3y3Qqdtlboa44Sb4uOp/y35yY=",
-    "stashName": "MASREGULATOR",
-    "enode": "36a216951bbd81860bcd887732192dbb72ca8d2ca79302b0691be5f59e7a5071871a259ea0526f7fabcd76838e5c7551221def3d7841d986e62a9c1bf7ade3b7",
-    "centralBank": false,
-    "regulator": true,
-    "localport": 3000
-  },
-  {
     "nodeId": 2,
     "host": "3.216.212.77",
     "port": 22002,
@@ -125,6 +112,19 @@
     "constKey": "BWHEzvahBUGZ7dIvs5PL7QrMhEB3ocxa/k1TmzCttSQ=",
     "stashName": "MTBCSGSG",
     "enode": "f9b0ffe01a7659b643ee0b141ba5fc39e76a17a193e5f22f3426b132b32d77afda884f37d13cecb72758194ff994508989ea981f8cc9e240caa3544f1b1f99f5",
+    "centralBank": false,
+    "regulator": false,
+    "localport": 3000
+  },
+  {
+    "nodeId": 10,
+    "host": "3.216.212.77",
+    "port": 22010,
+    "accountNumber": 0,
+    "ethKey": "0xc46ab8a6787c2c9df6f7baadac6896cc465e06bd",
+    "constKey": "JJblosOEfHNbKxhK+G3y3Qqdtlboa44Sb4uOp/y35yY=",
+    "stashName": "OCBCSGSG",
+    "enode": "36a216951bbd81860bcd887732192dbb72ca8d2ca79302b0691be5f59e7a5071871a259ea0526f7fabcd76838e5c7551221def3d7841d986e62a9c1bf7ade3b7",
     "centralBank": false,
     "regulator": false,
     "localport": 3000
