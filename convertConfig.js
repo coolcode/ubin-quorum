@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-var config = JSON.parse(fs.readFileSync('networkNodesInfo.json', 'utf8'));
+var nodes = JSON.parse(fs.readFileSync('./config/nodes.json', 'utf8'));
 
 var nettingConfig = [];
 
@@ -15,16 +15,16 @@ var stashNames = {
   "08" : "HSBCSGSG",
   "09" : "MTBCSGSG",
   "10" : "OCBCSGSG",
-  "12" : "SCBLSGSG",
-  "14" : "UOBVSGSG",
-  "15" : "XSIMSGSG"
+  "11" : "SCBLSGSG",
+  "12" : "UOBVSGSG",
+  "13" : "XSIMSGSG"
 };
 
 
 var counter = 0;
 
-Object.keys(config).forEach( enode => {
-  let nodeId = config[enode].nodeName.slice(2,4);
+nodes.forEach( enode => {
+  let nodeId = enode.nodeName.slice(2,4);
   let centralBank = false;
   let regulator = false;
   let stashName = stashNames[nodeId];
@@ -32,13 +32,13 @@ Object.keys(config).forEach( enode => {
   if (stashName === "MASREGULATOR") regulator = true;
   let nodeConfig = {
     "nodeId" : parseInt(nodeId),
-    "host" : "quorumnx"+nodeId+".southeastasia.cloudapp.azure.com",
-    "port": "20010",
+    "host" : "3.216.212.77",
+    "port": enode.rpcPort,
     "accountNumber" : 0,
-    "ethKey" : config[enode].address,
-    "constKey" : config[enode].constellationPublicKey,
+    "ethKey" : enode.address,
+    "constKey" : enode.constellationPublicKey,
     "stashName" : stashName,
-    "enode" : enode,
+    "enode" : enode.nodePubKey,
     "centralBank" : centralBank,
     "regulator" : regulator,
     "localport" : 3000

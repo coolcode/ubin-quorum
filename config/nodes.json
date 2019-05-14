@@ -1,0 +1,100 @@
+[
+  {
+    "nodeName": "nx01",
+    "constellationPublicKey": "QBj8GITWJkPkekxNPzZacPj12rWHPatyLSW6/4JKM1A=",
+    "nodePubKey": "d2536a694a69d5d2560962f92419159a12cb1ceeffe1b51e13c25a7fe5059a1e8ca8968199409a245fa62cd5183f8770682a21cf89f50a970b4664090b0fe0c8",
+    "rpcPort": 22001,
+    "address": "0x0bc9da2986f6e991f4aa49add040c70ce0792fe8"
+  },
+  {
+    "nodeName": "nx02",
+    "constellationPublicKey": "BJaI2+6RkPU080RaaaJZhseqVHeAaq0nlJP0quCYPy0=",
+    "nodePubKey": "0f7d028830eed33504396f60a52b11e7732b7a9c0a7b18b818609869ea7ea10acee8413651b7c72b388d89d26318ed4fdff0400d49039cbe7b833e41a775c49d",
+    "rpcPort": 22002,
+    "address": "0xb9399eabe27443216f1206dea226c259c23e2336"
+  },
+  {
+    "nodeName": "nx03",
+    "constellationPublicKey": "SkOtngWWBhbr5Gjf0QS2oX30scwHFNn65XFbYtRWpD4=",
+    "nodePubKey": "7c9e8a29d2b637b841f893b38050ca35570669b7e869e289cc942aa86cde15fa20a32753fb0b98a812d6a0538bd8fd7825c8a3c2c45e07bfebce8bc4d8c364ca",
+    "rpcPort": 22003,
+    "address": "0x82e1424db13757bdd2137f4057982b04d8d1bd61"
+  },
+  {
+    "nodeName": "nx04",
+    "constellationPublicKey": "RcLhjBO2sB+3gJID4vYeC9w16cZiw2VpH4OEvDLT83Q=",
+    "nodePubKey": "eb386160ac8133f24cca1fcf82ad8bde108cc02d7d33791cc01e9458467e74f6153c982801e780cad2e1060a29106bec9ed8516c04bc0b122d6de393a540cc06",
+    "rpcPort": 22004,
+    "address": "0x7531e209b650922b0fde9d604821c7c1019062da"
+  },
+  {
+    "nodeName": "nx05",
+    "constellationPublicKey": "dEzUMFu3byMCrCZ78giUYjRVvIvDXpAE8kMBXSdWARc=",
+    "nodePubKey": "1c5febebc3ba633089186ba482607b86053f30b977812307b85432fa5deb0c06b1a741e29e14849dad00a3031de7dc8108f602cfafa7a32612f90f7f08b28fa7",
+    "rpcPort": 22005,
+    "address": "0xbbee080f6cb214aaf996eea74852b22853371992"
+  },
+  {
+    "nodeName": "nx06",
+    "constellationPublicKey": "mpO0nAfpUatEEipz3hRb3Onj4F0V2o2mlRRLsFkm8jE=",
+    "nodePubKey": "9ea7e7b6315cd31a337f1d192b3c4f9718fa096292701f26b7b3cf4eb8b34b24b5fba04716cbe8e1d7926115cd5d1a25cd23144366ffa4af8dcebe2ec16a5911",
+    "rpcPort": 22006,
+    "address": "0xfd66a49c1ec3c6c410b7db59d5eb76fae0582336"
+  },
+  {
+    "nodeName": "nx07",
+    "constellationPublicKey": "ga0xvvczkwt90vDT+ILnmvz0nZThbt6v8hpQaWz8hg0=",
+    "nodePubKey": "13bdec6873e26805de2311ef0a987f83c6e4838b82a804e9c53fbef53ca8bf07077c650f554741df76573dd3aec2e1dd63c97d1b4f4d6b700ae9aa5e8a79f5ab",
+    "rpcPort": 22007,
+    "address": "0xc3ff6ad7c7f8d69c976f24b7cee37972b42c1aa4"
+  },
+  {
+    "nodeName": "nx08",
+    "constellationPublicKey": "Ax84YfxzUsW1Jo4OnRvKWxvZsSIWf2YVB3QoTyDKuC8=",
+    "nodePubKey": "1e464b5625c816f77a26b6586f85482581ce177f34af0e91fcd5fca1cde85348b6103e07d7c5fb6df94f8e9888294ac27eb535aed337a955b642fd9910173621",
+    "rpcPort": 22008,
+    "address": "0xd8a9a86cbe984cedc29663e1efbd8bb3be040b02"
+  },
+  {
+    "nodeName": "nx09",
+    "constellationPublicKey": "BWHEzvahBUGZ7dIvs5PL7QrMhEB3ocxa/k1TmzCttSQ=",
+    "nodePubKey": "f9b0ffe01a7659b643ee0b141ba5fc39e76a17a193e5f22f3426b132b32d77afda884f37d13cecb72758194ff994508989ea981f8cc9e240caa3544f1b1f99f5",
+    "rpcPort": 22009,
+    "address": "0xf10cf22b3645beea52d0e198dfaa00b86ef70596"
+  },
+  {
+    "nodeName": "nx010",
+    "constellationPublicKey": "JJblosOEfHNbKxhK+G3y3Qqdtlboa44Sb4uOp/y35yY=",
+    "nodePubKey": "36a216951bbd81860bcd887732192dbb72ca8d2ca79302b0691be5f59e7a5071871a259ea0526f7fabcd76838e5c7551221def3d7841d986e62a9c1bf7ade3b7",
+    "rpcPort": 22010,
+    "address": "0xc46ab8a6787c2c9df6f7baadac6896cc465e06bd"
+  },
+  {
+    "nodeName": "nx11",
+    "constellationPublicKey": "jn2V35ecpBi7vfENmLWlgpO0x74G93Gb35VrQkyEcBQ=",
+    "nodePubKey": "05a0eb601b0cde5d83ce0afda40b892f685a2ced4cbb23905e09b681a132f7623423de21aa2662a74170115a95b41679cb0c4ed2454ea351a83848546bae9d1f",
+    "rpcPort": 22011,
+    "address": "0xd5973c428f0abc8c06fe5912ec0d2fd4d2353068"
+  },
+  {
+    "nodeName": "nx12",
+    "constellationPublicKey": "40OZbyOJbNrnlGVb9wRTMgVajIBIVbNUYp/Q4zH4JFs=",
+    "nodePubKey": "442e261e63384a981b03ca2870726f4da61628764e2bec4c29f8991b4128fd6428c102067bbaa7d0381ce649020cf7eb00ba03fa1cbfcfa8b647d22312b7b8b1",
+    "rpcPort": 22012,
+    "address": "0x595d40d50e576e2aa22568bb1c167ac96c556ea6"
+  },
+  {
+    "nodeName": "nx13",
+    "constellationPublicKey": "oUIxZW/bi6ZotYcnMfIAuS3UQA+WxC3UlFbj5T/uGx4=",
+    "nodePubKey": "33a26b3dc4e2a70482c37f3f3275474e127fd09ebd4eed27f6c5b21a33e14de04c829517910f638ac61888446b29fca55b7e39b3f1628ce3322d4c60366121e4",
+    "rpcPort": 22013,
+    "address": "0x23ded8529578821c6c31bac7e6798156df88ea6e"
+  },
+  {
+    "nodeName": "nx14",
+    "constellationPublicKey": "/9i47CLxRhVgJZdBugd5SJX76yqTOMpjf1ivheD4IE8=",
+    "nodePubKey": "8b7f9185b3e365bfe4f5aab1ddc461f7a1fb3ad4e06e50ebb4a7a27ca4796155c3543e142eb809b99dfbd6b43c59ac38620bb231f458849cbaef68a858bd7c05",
+    "rpcPort": 22014,
+    "address": "0xc42d45b417c27cb7cb449d67c49c1b5f96e1c4a4"
+  }
+]

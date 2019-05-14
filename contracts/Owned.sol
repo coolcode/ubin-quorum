@@ -11,7 +11,7 @@ contract Owned{
     if(msg.sender!=owner) throw; _;
   }
 
-  function getOwner() constant returns (address) {
+  function getOwner() view returns (address) {
     return owner;
   }
 

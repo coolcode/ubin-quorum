@@ -37,15 +37,15 @@ contract Stash is Owned {
     position -= amt;
   }
 
-  function getBalance() constant returns (int) {
+  function getBalance() view returns (int) {
     return balance;
   }
 
-  function getPosition() constant returns (int) {
+  function getPosition() view returns (int) {
     return position;
   }
 
-  function isSolvent() constant returns (bool) {
+  function isSolvent() view returns (bool) {
     return position >= 0;
   }
 
@@ -53,7 +53,7 @@ contract Stash is Owned {
     controlled = true;
   }
 
-  function isControlled() constant returns (bool) {
+  function isControlled() view returns (bool) {
     return controlled;
   }
 }

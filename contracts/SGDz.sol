@@ -36,7 +36,7 @@ contract SGDz is Owned { // to be deployed by MAS
   mapping (address => ProposalQueue) proposalQueue; // queued proposals for netting
 
   function getProposal(bytes32 _pmtRef, address _participant)
-    internal constant returns (BalanceProposal)
+    internal view returns (BalanceProposal)
   {
     if (shieldedPayments[_pmtRef].receiver == _participant) {
       return shieldedPayments[_pmtRef].receiverProposal;
@@ -45,7 +45,7 @@ contract SGDz is Owned { // to be deployed by MAS
     }
   }
 
-  function getAmountHash(bytes32 _pmtRef) constant returns (bytes32) {
+  function getAmountHash(bytes32 _pmtRef) view returns (bytes32) {
     return shieldedPayments[_pmtRef].amountHash;
   }
 
@@ -56,7 +56,7 @@ contract SGDz is Owned { // to be deployed by MAS
   }
 
 
-  function getParticipants() constant returns (address[]) {
+  function getParticipants() view returns (address[]) {
     return participants;
   }
 
@@ -169,14 +169,14 @@ contract SGDz is Owned { // to be deployed by MAS
     }
   }
 
-  function proofNotExpired(bytes32 _pmtRef) internal constant returns (bool) {
+  function proofNotExpired(bytes32 _pmtRef) internal view returns (bool) {
     ShieldedPayment spmt = shieldedPayments[_pmtRef];
     if (spmt.receiverProposal.startBalanceHash != shieldedBalances[spmt.receiver]) return false;
     if (spmt.senderProposal.startBalanceHash != shieldedBalances[spmt.sender]) return false;
     return true;
   }
 
-  function proofCompleted(bytes32 _pmtRef) constant returns (bool) {
+  function proofCompleted(bytes32 _pmtRef) view returns (bool) {
     return shieldedPayments[_pmtRef].receiverProposal.validated && shieldedPayments[_pmtRef].senderProposal.validated;
   }
 
@@ -202,15 +202,15 @@ contract SGDz is Owned { // to be deployed by MAS
     BatchedProposalCompleted();
   }
 
-  function isReceiver(bytes32 _pmtRef) internal constant returns (bool) {
+  function isReceiver(bytes32 _pmtRef) internal view returns (bool) {
     return (shieldedPayments[_pmtRef].receiver == tx.origin);
   }
 
-  function pmtProcessed(bytes32 _pmtRef) external constant returns (bool) {
+  function pmtProcessed(bytes32 _pmtRef) external view returns (bool) {
     return shieldedPayments[_pmtRef].processed;
   }
 
-  function debugVerifyABC(bytes proof, bytes32 h1, bytes32 h2, bytes32 h3) constant external returns (bool) {
+  function debugVerifyABC(bytes proof, bytes32 h1, bytes32 h2, bytes32 h3) view external returns (bool) {
     return zsl.verifyABC(proof, h1, h2, h3);
   }
 

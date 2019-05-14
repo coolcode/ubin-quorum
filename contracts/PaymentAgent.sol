@@ -63,7 +63,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     }
   }
 
-  function getCurrentSalt() constant returns (bytes16) {
+  function getCurrentSalt() view returns (bytes16) {
     require(msg.sender == owner || checkOwnedStash(acc2stash[msg.sender]));
     return currentSalt;
   }
@@ -118,10 +118,10 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   bytes32[] public redeemIdx;
   mapping (bytes32 => Redeem) public redeems;
 
-  function getPledgeHistoryLength() constant returns (uint) {
+  function getPledgeHistoryLength() view returns (uint) {
     return pledgeIdx.length;
   }
-  function getRedeemHistoryLength() constant returns (uint) {
+  function getRedeemHistoryLength() view returns (uint) {
     return redeemIdx.length;
   }
   /* payments */
@@ -150,11 +150,11 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   bytes32[] public pmtIdx;                  // @private (list of all-trans)
   mapping (bytes32 => Pmt) public payments; // @private
 
-  function getSalt(bytes32 _txRef) constant returns (bytes16) {
+  function getSalt(bytes32 _txRef) view returns (bytes16) {
     return payments[_txRef].salt;
   }
 
-  function getOutgoingQueueDepth() constant returns(uint) {
+  function getOutgoingQueueDepth() view returns(uint) {
     uint result = 0;
     for (uint i = 0; i < gridlockQueue.length; ++i) {
       if (payments[gridlockQueue[i]].sender == acc2stash[msg.sender]) {
@@ -168,16 +168,16 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
 
   bytes32[] public onholdPmts;
 
-  function getOnholdCount() constant returns(uint) {
+  function getOnholdCount() view returns(uint) {
     return onholdPmts.length;
   }
 
-  function getOnholdPmtDetails(uint index) constant returns( bytes32, bytes32, bytes32, int, PmtState, int, bool, uint){
+  function getOnholdPmtDetails(uint index) view returns( bytes32, bytes32, bytes32, int, PmtState, int, bool, uint){
     bytes32 txRef = onholdPmts[index];
     return (txRef, payments[txRef].sender, payments[txRef].receiver, payments[txRef].amount, payments[txRef].state, payments[txRef].express, payments[txRef].putInQueue, payments[txRef].timestamp);
   }
 
-  function getPaymentAmount(bytes32 _txRef) constant returns (int) {
+  function getPaymentAmount(bytes32 _txRef) view returns (int) {
     require(checkOwnedStash(payments[_txRef].sender) || checkOwnedStash(payments[_txRef].receiver));
     return payments[_txRef].amount;
   }
@@ -510,7 +510,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   /*   Array(stashNames); */
   /* } */
 
-  function getStashNames() constant returns (bytes32[]) {
+  function getStashNames() view returns (bytes32[]) {
     return stashNames;
   }
 
@@ -682,15 +682,15 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     require(now >= resolveEndTime + proofTimeout);
     nextState();
   }
-  /* function pmtProved(bytes32 _txRef) external constant returns (bool) { */
+  /* function pmtProved(bytes32 _txRef) external view returns (bool) { */
   /*   return SGDz(zAddress).pmtProcessed(_txRef); */
   /* } */
 
-  /* function pmtProved(bytes32 _txRef) external constant returns (bool) { */
+  /* function pmtProved(bytes32 _txRef) external view returns (bool) { */
   /*   return SGDz(zAddress).paymentIsValidated(_txRef); */
   /* } */
 
-  function pmtProved(bytes32 _txRef) external constant returns (bool) {
+  function pmtProved(bytes32 _txRef) external view returns (bool) {
     return SGDz(zAddress).proofCompleted(_txRef);
   }
 
@@ -936,33 +936,33 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
 
   /* @live:
      for stashes not owned by you this returns the net bilateral position */
-  function getBalance(bytes32 _stashName) isStashOwner(_stashName) constant returns (int) {
+  function getBalance(bytes32 _stashName) isStashOwner(_stashName) view returns (int) {
     Stash stash = Stash(stashRegistry[_stashName]);
     return stash.getBalance();
   }
 
-  function getPosition(bytes32 _stashName) isStashOwner(_stashName) constant returns (int) {
+  function getPosition(bytes32 _stashName) isStashOwner(_stashName) view returns (int) {
     Stash stash = Stash(stashRegistry[_stashName]);
     return stash.getPosition();
   }
 
-  function getLineLength() constant returns (uint) {
+  function getLineLength() view returns (uint) {
     return resolveSequence.length;
   }
 
-  function getHistoryLength() constant returns (uint) {
+  function getHistoryLength() view returns (uint) {
     return pmtIdx.length;
   }
 
-  function getGridlockQueueDepth() constant returns (uint) {
+  function getGridlockQueueDepth() view returns (uint) {
     return gridlockQueue.length;
   }
 
-  function getGlobalGridlockQueueDepth() constant returns (uint) {
+  function getGlobalGridlockQueueDepth() view returns (uint) {
     return globalGridlockQueueDepth;
   }
 
-  function getIsPaymentActive(bytes32 _txRef) external constant returns(bool) {
+  function getIsPaymentActive(bytes32 _txRef) external view returns(bool) {
     GridlockedPmt g_pmt = globalGridlockQueue[_txRef]; /* to be changed */
     if(g_pmt.state == GridlockState.Active){
       return true;
@@ -972,13 +972,13 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   }
 
   //given a bank, check if it is the owner
-  function checkOwnedStash(bytes32 _stashName) constant returns (bool) {
+  function checkOwnedStash(bytes32 _stashName) view returns (bool) {
     if (msg.sender == owner) return true; // MAS does not need to mark its own stash
     Stash stash = Stash(stashRegistry[_stashName]);
     return stash.isControlled();
   }
 
-  function isNettingParticipant() constant returns (bool) {
+  function isNettingParticipant() view returns (bool) {
     bytes32 myStashName = getOwnedStash();
     for (uint i = 0; i < resolveSequence.length; ++i) {
       if (myStashName == acc2stash[resolveSequence[i]]) return true;
@@ -986,7 +986,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     return false;
   }
 
-  function getOwnedStash() constant returns (bytes32) {
+  function getOwnedStash() view returns (bytes32) {
     if (isCentralBankNode()) return centralBank;
     for (uint i = 0; i < stashNames.length; i++) {
       Stash stash = Stash(stashRegistry[stashNames[i]]);
@@ -997,7 +997,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   }
 
   // Central bank controls all the stashes
-  function isCentralBankNode() constant returns (bool) {
+  function isCentralBankNode() view returns (bool) {
     for (uint i = 0; i < stashNames.length; i++) {
       Stash stash = Stash(stashRegistry[stashNames[i]]);
       if (!stash.isControlled()) {
@@ -1007,7 +1007,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     return true;
   }
 
-  function getThreshold() constant returns (uint) {
+  function getThreshold() view returns (uint) {
     return maxQueueDepth;
   }
 
@@ -1015,7 +1015,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     maxQueueDepth = _threshold;
   }
 
-  function getAgentState() constant returns (uint) {
+  function getAgentState() view returns (uint) {
     if(agentState == AgentState.Normal){
       return 0;
     } else if (agentState == AgentState.Lineopen){
@@ -1027,26 +1027,26 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
     }
   }
 
-  function getResolveSequence() constant returns (address[]) {
+  function getResolveSequence() view returns (address[]) {
     return resolveSequence;
   }
 
-  function getResolveSequenceLength() constant returns (uint) {
+  function getResolveSequenceLength() view returns (uint) {
     return resolveSequence.length;
   }
 
-  function getCurrentStash() constant returns (bytes32) {
+  function getCurrentStash() view returns (bytes32) {
     return acc2stash[resolveSequence[current]];
   }
 
-  function getMyResolveSequenceId() constant returns (int) {
+  function getMyResolveSequenceId() view returns (int) {
     for (uint i = 0; i < resolveSequence.length; i++) {
       if (resolveSequence[i] == tx.origin) return int(i);
     }
     return -1;
   }
 
-  function getActiveGridlockCount() constant returns (uint) {
+  function getActiveGridlockCount() view returns (uint) {
     uint result = 0;
     for (uint i = 0; i < gridlockQueue.length-1; i++) {
       Pmt pmt = payments[gridlockQueue[i]];
@@ -1097,7 +1097,7 @@ contract PaymentAgent is Owned { // Regulator node (MAS) should be the owner
   // -----------------------------------------------------
   // TO DO - To be refactored into a common untils - Laks
   // -----------------------------------------------------
-  function ArrayIndexOf(bytes32[] values, bytes32 value) constant internal returns (uint,bool) {
+  function ArrayIndexOf(bytes32[] values, bytes32 value) view internal returns (uint,bool) {
     bool found = false;
     uint i;
     for(i=0; i< values.length; i++){

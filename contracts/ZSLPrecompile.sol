@@ -18,28 +18,28 @@
  @title Abstract contract for built-in function
  */
 contract ZSLPrecompileSHA256Compress {
-    function run(bytes) constant returns (bytes32);
+    function run(bytes) view returns (bytes32);
 }
 
 /**
  @title Abstract contract for built-in function
  */
 contract ZSLPrecompileVerify {
-    function run(bytes, bytes32, bytes32, uint64) constant returns (bytes32);
+    function run(bytes, bytes32, bytes32, uint64) view returns (bytes32);
 }
 
 /**
  @title Abstract contract for built-in function
  */
 contract ZSLPrecompileVerifyTransfer {
-    function run(bytes, bytes32, bytes32, bytes32, bytes32, bytes32, bytes32, bytes32) constant returns (bytes32);
+    function run(bytes, bytes32, bytes32, bytes32, bytes32, bytes32, bytes32, bytes32) view returns (bytes32);
 }
 
 /**
  @title Abstract contract for built-in function
  */
 contract ZSLPrecompileVerifyABC {
-    function run(bytes, bytes32, bytes32, bytes32) constant returns (bytes32);
+    function run(bytes, bytes32, bytes32, bytes32) view returns (bytes32);
 }
 
 /**
@@ -63,7 +63,7 @@ contract ZSLPrecompile {
     }
 
     // @param input Input data block must be 64 bytes (512 bits) in length
-    function SHA256Compress(bytes input) constant external returns (bytes32 result) {
+    function SHA256Compress(bytes input) view external returns (bytes32 result) {
         require(input.length == 64);
         return compressContract.run(input);
     }
@@ -78,7 +78,7 @@ contract ZSLPrecompile {
         bytes32 send_nf_2,
         bytes32 cm_1,
         bytes32 cm_2
-    ) constant external returns (bool) {
+    ) view external returns (bool) {
         bytes32 buffer = verifyShieldedTransferContract.run(
             proof, anchor, spend_nf_1, spend_nf_2,
             send_nf_1, send_nf_2, cm_1, cm_2);
@@ -93,7 +93,7 @@ contract ZSLPrecompile {
 
 
     // @param input The ZK Proof to verify
-    function verifyShielding(bytes proof, bytes32 send_nf, bytes32 cm, uint64 value) constant external returns (bool) {
+    function verifyShielding(bytes proof, bytes32 send_nf, bytes32 cm, uint64 value) view external returns (bool) {
         bytes32 buffer = verifyShieldingContract.run(proof, send_nf, cm, value);
         byte b = buffer[0];
         if (b == 0x00) {
@@ -107,7 +107,7 @@ contract ZSLPrecompile {
 
 
     // @param input The ZK Proof to verify
-    function verifyUnshielding(bytes proof, bytes32 spend_nf, bytes32 rt, uint64 value) constant external returns (bool) {
+    function verifyUnshielding(bytes proof, bytes32 spend_nf, bytes32 rt, uint64 value) view external returns (bool) {
         bytes32 buffer = verifyUnshieldingContract.run(proof, spend_nf, rt, value);
         byte b = buffer[0];
         if (b == 0x00) {
@@ -120,7 +120,7 @@ contract ZSLPrecompile {
 
 
     // @param input The ZK Proof to verify
-    function verifyABC(bytes proof, bytes32 h1, bytes32 h2, bytes32 h3) constant external returns (bool) {
+    function verifyABC(bytes proof, bytes32 h1, bytes32 h2, bytes32 h3) view external returns (bool) {
         bytes32 buffer = verifyABCContract.run(proof, h1, h2, h3);
         byte b = buffer[0];
         if (b == 0x00) {
