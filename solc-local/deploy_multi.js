@@ -3,8 +3,8 @@ const solc = require('solc');
 const Web3 = require('web3');
 
 // To do : Update host and port to read from deployment script
-const host = "quorumnx01.southeastasia.cloudapp.azure.com";
-const port = "20010";
+const host = "3.216.212.77";
+const port = "22001";
 const web3 = new Web3(new Web3.providers.HttpProvider("http://" + host + ":" + port));
 
 

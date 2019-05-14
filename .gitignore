@@ -24,3 +24,4 @@ api/.node-xmlhttprequest*
 *DS_Store
 start.sh
 .node*
+package-lock.json
