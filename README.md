@@ -312,7 +312,7 @@ $ ./deploy.sh
 Initialise the bank stashes and balances
 
 ```sh
-$ cd ~/ubin-quorum/test-scripts
+$ cd ~/ubin-quorum/test
 $ ./initStash.sh 10 2000 3000 4000 5000 6000 7000 8000 9000 1000 1200 1400 1500
 # Gridlock queue depth = 10
 # Initialise bank balances for different banks = 2000 3000 4000 5000 6000 7000 8000 9000 1000 1200 1400 1500
@@ -331,7 +331,7 @@ $ ./deploy.sh
 2\. Once the contracts have been deployed, the stashes can be initialised.
 
 ```sh
-$ cd ~/ubin-quorum/test-scripts
+$ cd ~/ubin-quorum/test
 $ ./initStash.sh 10 2000 3000 4000 5000 6000 7000 8000 9000 1000 1200 1400 1500
 # Grid lock queue depth = 10
 # Initialise bank balances for different banks = 2000 3000 4000 5000 6000 7000 8000 9000 1000 1200 1400 1500

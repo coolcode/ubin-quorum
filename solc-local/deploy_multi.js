@@ -29,7 +29,7 @@ var sgdz = sgdzContract.new({
             fs.writeFile('zAddress', contract.address,
                 err => { if (err) console.log(err); });
 
-            fs.writeFile('../test-scripts/config/zAddress', contract.address,
+            fs.writeFile('../test/config/zAddress', contract.address,
                 err => { if (err) console.log(err); });
         }
     }

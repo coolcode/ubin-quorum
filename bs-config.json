@@ -1,7 +1,7 @@
 {
   "port": 8000,
   "server": {
-    "baseDir": ["./src", "./build/contracts", "./test-scripts/v1/config"]
+    "baseDir": ["./src", "./build/contracts", "./test/v1/config"]
   },
   "ui": {
     "port": 8001
