@@ -29,11 +29,6 @@ const deploy_contract = (contract_name) => {
             } else {
                 console.log(`'${contract_name}' Contract mined! Address: ` + contract.address);
 
-                fs.writeFile(contract_name + '_Address', contract.address,
-                    err => {
-                        if (err) console.log(err);
-                    });
-
                 fs.writeFile('../test/config/' + contract_name + '_Address', contract.address,
                     err => {
                         if (err) console.log(err);
@@ -41,7 +36,6 @@ const deploy_contract = (contract_name) => {
             }
         }
     });
-
 };
 
 deploy_contract('StashFactory');
@@ -49,4 +43,4 @@ deploy_contract('SGDz');
 deploy_contract('PledgeAgent');
 deploy_contract('RedeemAgent');
 deploy_contract('Bank');
-deploy_contract('GridlockQueue');
+//deploy_contract('GridlockQueue');

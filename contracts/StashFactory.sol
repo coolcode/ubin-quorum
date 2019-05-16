@@ -4,9 +4,6 @@ import "./Owned.sol";
 import "./Stash.sol";
 
 contract StashFactory is Owned {
-    function StashFactory(){
-
-    }
 
     /* stashes */
     bytes32[] public stashNames;

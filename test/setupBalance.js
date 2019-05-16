@@ -1,5 +1,5 @@
 const fs = require('fs');
-var nodes = JSON.parse(fs.readFileSync('config/config.json', 'utf8'));
+var nodes = JSON.parse(fs.readFileSync('config/nodes.json', 'utf8'));
 
 var PaymentAgent = artifacts.require("./PaymentAgent.sol");
 var SGDz = artifacts.require("./SGDz.sol");
@@ -17,7 +17,7 @@ var bankIdx = process.argv[6];
 var bal = process.argv[7];
 // bal = bal < 1 ? 1 : bal; //balance can't be zero
 var saltStr = "cb06bf108dd249884188983c75186512";// fixed salt for now
-// //enable quick selection of receiver based on order in config.json
+// //enable quick selection of receiver based on order in nodes.json
 // //bypass if full name of recever provided//
 // if (receiver.length === 1){
 //   receiver_acc = nodes[receiver].ethKey;

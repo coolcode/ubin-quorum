@@ -51,7 +51,7 @@ nodes.forEach( enode => {
 
 nettingConfig.sort((a,b) => { return a.nodeId - b.nodeId; });
 
-fs.writeFile('test/config/config.json', JSON.stringify(nettingConfig),
+fs.writeFile('test/config/nodes.json', JSON.stringify(nettingConfig),
              err => { if(err) console.log(err); });
 
 var testnet = { "nodes" : nettingConfig.map(i => i.constKey) };

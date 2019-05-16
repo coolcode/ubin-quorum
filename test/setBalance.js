@@ -1,5 +1,5 @@
 const fs = require('fs');
-var nodes = JSON.parse(fs.readFileSync('config/config.json', 'utf8'));
+var nodes = JSON.parse(fs.readFileSync('config/nodes.json', 'utf8'));
 var PaymentAgent = artifacts.require("./PaymentAgent.sol");
 var u = require('./test-utils.js');
 // set initial variables
