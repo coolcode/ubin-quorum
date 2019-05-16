@@ -22,8 +22,7 @@ contract RedeemAgent {
 
     /* @live:
        privateFor = MAS and owner node */
-    function redeem(bytes32 _txRef, bytes32 _stashName, int _amount) external
-    {
+    function redeem(bytes32 _txRef, bytes32 _stashName, int _amount) external{
         redeemIdx.push(_txRef);
         redeems[_txRef].txRef = _txRef;
         redeems[_txRef].stashName = _stashName;

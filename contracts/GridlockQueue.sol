@@ -208,23 +208,13 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     /* resolve sequence */
     address[] public resolveSequence;          // order of banks for round-robin in resolution steps
 
-    /* struct Participant { */
-    /*   address ethKey; */
-    /*   bool exists; */
-    /* } */
-    /* mapping(uint => Participant) resolveSequence; */
-    /* uint resolveSequenceLength; */
-
     uint public current;                       // current resolving bank
 
     mapping(address => bytes32) public acc2stash; // @pseudo-public
     function registerStash(address _acc, bytes32 _stashName) onlyOwner {
         acc2stash[_acc] = _stashName;
     }
-//    modifier isStashOwner(bytes32 _stashName) {
-//        require(msg.sender == owner || acc2stash[msg.sender] == _stashName);
-//        _;
-//    }
+
     modifier onlySender(bytes32 _txRef) {require(acc2stash[tx.origin] == payments[_txRef].sender);
         _;}
     modifier onlyTxParties(bytes32 _txRef) {require(acc2stash[tx.origin] == payments[_txRef].sender || acc2stash[tx.origin] == payments[_txRef].receiver);
@@ -603,8 +593,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
             if (pmt.txRef == _txRef) {
                 if (!checkOwnedStash(pmt.receiver)) return false;
                 sf.updatePosition(pmt.receiver, pmt.sender, pmt.amount);
-//                Stash(stashRegistry[pmt.sender]).inc_position(pmt.amount);
-//                Stash(stashRegistry[pmt.receiver]).dec_position(pmt.amount);
                 return true;
             }
         }
@@ -666,8 +654,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
             } else if (g_pmt.state == GridlockState.Inactive) {// reactivate inactive pmts
                 g_pmt.state = GridlockState.Active;
                 sf.updatePosition(pmt.sender, pmt.receiver, pmt.amount);
-//                Stash(stashRegistry[pmt.sender]).dec_position(pmt.amount);
-//                Stash(stashRegistry[pmt.receiver]).inc_position(pmt.amount);
                 gridlockQueue[numGridlockedPmts] = pmt.txRef;
                 numGridlockedPmts++;
             } else if (g_pmt.state == GridlockState.Onhold) {
@@ -690,13 +676,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         require(now >= resolveEndTime + proofTimeout);
         nextState();
     }
-    /* function pmtProved(bytes32 _txRef) external view returns (bool) { */
-    /*   return SGDz(zAddress).pmtProcessed(_txRef); */
-    /* } */
-
-    /* function pmtProved(bytes32 _txRef) external view returns (bool) { */
-    /*   return SGDz(zAddress).paymentIsValidated(_txRef); */
-    /* } */
 
     function pmtProved(bytes32 _txRef) external view returns (bool) {
         return sgdz.proofCompleted(_txRef);
@@ -1156,7 +1135,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         gridlockQueue.length = 0;
         onholdPmts.length = 0;
         expressCount = 0;
-        //inactivationTracker = 0;
     }
 
     function wipeout() {
