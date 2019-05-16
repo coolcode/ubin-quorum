@@ -65,7 +65,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     function getOutgoingQueueDepth() view returns (uint) {
         uint result = 0;
         for (uint i = 0; i < gridlockQueue.length; ++i) {
-            if (payments[gridlockQueue[i]].sender == acc2stash[msg.sender]) {
+            if (payments[gridlockQueue[i]].sender == bank.getStash(msg.sender)) {
                 result++;
             }
         }
@@ -110,16 +110,11 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
 
     uint public current;                       // current resolving bank
 
-    mapping(address => bytes32) public acc2stash; // @pseudo-public
-    function registerStash(address _acc, bytes32 _stashName) onlyOwner {
-        acc2stash[_acc] = _stashName;
-    }
-
-    modifier onlySender(bytes32 _txRef) {require(acc2stash[tx.origin] == payments[_txRef].sender);
+    modifier onlySender(bytes32 _txRef) {require(bank.getStash(tx.origin) == payments[_txRef].sender);
         _;}
-    modifier onlyTxParties(bytes32 _txRef) {require(acc2stash[tx.origin] == payments[_txRef].sender || acc2stash[tx.origin] == payments[_txRef].receiver);
+    modifier onlyTxParties(bytes32 _txRef) {require(bank.getStash(tx.origin) == payments[_txRef].sender || bank.getStash(tx.origin) == payments[_txRef].receiver);
         _;}
-    modifier onlyReceiver(bytes32 _txRef) {require(acc2stash[tx.origin] == payments[_txRef].receiver);
+    modifier onlyReceiver(bytes32 _txRef) {require(bank.getStash(tx.origin) == payments[_txRef].receiver);
         _;}
 
     modifier isYourTurn() {if (resolveSequence[current] != msg.sender) throw;
@@ -223,11 +218,11 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         bytes32[] _doneStashes,
         bytes32[] _notDoneStashes)
     {
-        if (checkOwnedStash(acc2stash[resolveSequence[current]]) &&
-            !(acc2stash[resolveSequence[current]] != bank.centralBank() && isCentralBankNode())) {
+        if (checkOwnedStash(bank.getStash(resolveSequence[current])) &&
+            !(bank.getStash(resolveSequence[current]) != bank.centralBank() && isCentralBankNode())) {
             if (!committed) throw;
             else committed = false;
-            if (checkOwnedStash(acc2stash[resolveSequence[current]])) {
+            if (checkOwnedStash(bank.getStash(resolveSequence[current]))) {
                 if (!arrayEqual(_inactivatedPmtRefs, inactivatedPmtRefs)) throw;
                 if (!arrayEqual(_doneStashes, doneStashes)) throw;
                 if (!arrayEqual(_notDoneStashes, notDoneStashes)) throw;
@@ -352,8 +347,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     {
         if (lineOpenTime == 0) {lineOpenTime = now;}
         resolveSequence.push(msg.sender);
-        /* acc2stash[msg.sender] = _stashName; */
-        done[acc2stash[msg.sender]] = false;
+        done[bank.getStash(msg.sender)] = false;
         Time(lineOpenTime + timeout - now);
         if (resolveSequence.length == sf.getStashNameCount()) nextState();
     }
@@ -361,7 +355,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
 
     function isParticipating(bytes32 _stashName) internal returns (bool) {
         for (uint i = 0; i < resolveSequence.length; i++) {
-            if (acc2stash[resolveSequence[i]] == _stashName) return true;
+            if (bank.getStash(resolveSequence[i]) == _stashName) return true;
         }
         return false;
     }
@@ -422,7 +416,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     returns (bool _didResolution)
     {
         lastResolveTime = now;
-        bytes32 currentStash = acc2stash[resolveSequence[current]];
+        bytes32 currentStash = bank.getStash(resolveSequence[current]);
         if (!checkOwnedStash(currentStash)) {return false;}
         if (currentStash != bank.centralBank() && isCentralBankNode()) {return false;}
         for (uint i = 0; i < gridlockQueue.length; i++) {
@@ -461,7 +455,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         doneStashes.length = 0;
         notDoneStashes.length = 0;
         for (uint k = 0; k < resolveSequence.length; k++) {
-            bytes32 stashName = acc2stash[resolveSequence[k]];
+            bytes32 stashName = bank.getStash(resolveSequence[k]);
             if (done[stashName]) doneStashes.push(stashName);
             else notDoneStashes.push(stashName);
         }
@@ -475,7 +469,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     function allDone() internal returns (bool) {
         bool alldone = true;
         for (uint i = 0; i < resolveSequence.length; i++) {
-            if (!done[acc2stash[resolveSequence[i]]]) {
+            if (!done[bank.getStash(resolveSequence[i])]) {
                 alldone = false;
                 break;
             }
@@ -692,7 +686,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         }
         else Status(_txRef, false);
 
-        // Debug message - acc2stash[msg.sender] is empty leading to onlySender to fail - Laks
+        // Debug message - bank.getStash(msg.sender) is empty leading to onlySender to fail - Laks
     }
 
     // ---------------------------------------------------------------------------
@@ -795,7 +789,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     function isNettingParticipant() view returns (bool) {
         bytes32 myStashName = getOwnedStash();
         for (uint i = 0; i < resolveSequence.length; ++i) {
-            if (myStashName == acc2stash[resolveSequence[i]]) return true;
+            if (myStashName == bank.getStash(resolveSequence[i])) return true;
         }
         return false;
     }
@@ -839,7 +833,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     }
 
     function getCurrentStash() view returns (bytes32) {
-        return acc2stash[resolveSequence[current]];
+        return bank.getStash(resolveSequence[current]);
     }
 
     function getMyResolveSequenceId() view returns (int) {

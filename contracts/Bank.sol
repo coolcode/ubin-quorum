@@ -31,6 +31,10 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         acc2stash[_acc] = _stashName;
     }
 
+    function getStash(address _acc) view returns(bytes32){
+        return acc2stash[_acc];
+    }
+
     /* @pseudo-public
          during LSM / confirming pmt: banks and cb will call this to set their current salt
        @private for: [pledger]
