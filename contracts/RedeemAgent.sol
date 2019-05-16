@@ -1,9 +1,6 @@
 pragma solidity ^0.4.14;
 
 contract RedeemAgent {
-    function RedeemAgent(){
-
-    }
 
     struct Redeem {
         bytes32 txRef;

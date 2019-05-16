@@ -44,6 +44,8 @@ const deploy_contract = (contract_name) => {
 
 };
 
-deploy_contract('SGDz');
 deploy_contract('StashFactory');
+deploy_contract('SGDz');
+deploy_contract('PledgeAgent');
+deploy_contract('RedeemAgent');
 deploy_contract('GridlockQueue');

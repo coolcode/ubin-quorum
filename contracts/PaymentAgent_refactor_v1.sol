@@ -83,7 +83,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         return currentSalt;
     }
 
-        /* set up central bank */
+    /* set up central bank */
     bytes32 public centralBank;
 
     function setCentralBank(bytes32 _stashName) onlyOwner {
@@ -524,8 +524,8 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
             if (!isParticipating(inflow.sender) && g_inflow.state == GridlockState.Active) {
                 g_inflow.state = GridlockState.Inactive;
                 sf.updatePosition(inflow.receiver, inflow.sender, inflow.amount);
-//                Stash(stashRegistry[inflow.sender]).inc_position(inflow.amount);
-//                Stash(stashRegistry[inflow.receiver]).dec_position(inflow.amount);
+                //                Stash(stashRegistry[inflow.sender]).inc_position(inflow.amount);
+                //                Stash(stashRegistry[inflow.receiver]).dec_position(inflow.amount);
             }
         }
         /* Bilateral EAF2 */
@@ -541,8 +541,8 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
                 g_pmt.state = GridlockState.Inactive;
                 inactivatedPmtRefs.push(pmt.txRef);
                 sf.updatePosition(pmt.receiver, pmt.sender, pmt.amount);
-//                Stash(stashRegistry[pmt.sender]).inc_position(pmt.amount);
-//                Stash(stashRegistry[pmt.receiver]).dec_position(pmt.amount);
+                //                Stash(stashRegistry[pmt.sender]).inc_position(pmt.amount);
+                //                Stash(stashRegistry[pmt.receiver]).dec_position(pmt.amount);
                 done[pmt.receiver] = false;
             }
         }
