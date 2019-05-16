@@ -8,7 +8,8 @@ contract Owned{
   }
 
   modifier onlyOwner() {
-    if(msg.sender!=owner) throw; _;
+    _;
+    //if(msg.sender!=owner) throw; _;
   }
 
   function getOwner() view returns (address) {
