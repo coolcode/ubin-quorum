@@ -1,11 +1,9 @@
 pragma solidity ^0.4.11;
 
 import "./Owned.sol";
-import "./Stash.sol";
 import "./SGDz.sol";
 import "./StashFactory.sol";
-import "./RedeemAgent.sol";
-import "./PledgeAgent.sol";
+import "./Bank.sol";
 
 contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
 
@@ -23,97 +21,12 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
 
     StashFactory public sf;
     SGDz public sgdz;
-    RedeemAgent public redeemAgent;
-    PledgeAgent public pledgeAgent;
+    Bank public bank;
 
-    function setExternalContracts(address _sf, address _sgdz, address _ra, address _pa) onlyOwner {
+    function setExternalContracts(address _sf, address _sgdz, address _bank) onlyOwner {
         sf = StashFactory(_sf);
         sgdz = SGDz(_sgdz);
-        redeemAgent = RedeemAgent(_ra);
-        pledgeAgent = PledgeAgent(_pa);
-    }
-
-    /* salt tracking */
-    bytes16 public currentSalt; // used to retrieve shielded balance
-    bytes16 public nettingSalt; // used to cache result salt after LSM calculation
-
-    /* @pseudo-public
-         during LSM / confirming pmt: banks and cb will call this to set their current salt
-       @private for: [pledger]
-         during pledge / redeem: MAS-regulator / cb will invoke this function
-     */
-    function setCurrentSalt(bytes16 _salt) {
-        bytes32 _stashName = acc2stash[msg.sender];
-        require(checkOwnedStash(_stashName), "not owned stash");
-        // non-owner will not update salt
-        if (acc2stash[msg.sender] != centralBank) {// when banks are setting salt, cb should not update its salt
-            require(msg.sender == owner || !isCentralBankNode());
-            // unless it invoked by MAS-regulator
-        } else {
-            require(isCentralBankNode());
-            // when cb are setting salt, banks should not update its salt
-        }
-        currentSalt = _salt;
-    }
-
-    /* @pseudo-public */
-    function setNettingSalt(bytes16 _salt) {
-        bytes32 _stashName = acc2stash[msg.sender];
-        require(checkOwnedStash(_stashName), "not owned stash");
-        // non-owner will not update salt
-        if (acc2stash[msg.sender] != centralBank) {// when banks are setting salt, cb should not update its salt
-            require(msg.sender == owner || !isCentralBankNode());
-            // unless it invoked by MAS-regulator
-        } else {
-            require(isCentralBankNode());
-            // when cb are setting salt, banks should not update its salt
-        }
-        nettingSalt = _salt;
-    }
-
-    // @pseudo-public, all the banks besides cb will not execute this action
-    function setCentralBankCurrentSalt(bytes16 _salt) onlyCentralBank {
-        if (isCentralBankNode()) {
-            currentSalt = _salt;
-        }
-    }
-
-    function getCurrentSalt() view returns (bytes16) {
-        require(msg.sender == owner || checkOwnedStash(acc2stash[msg.sender]));
-        return currentSalt;
-    }
-
-        /* set up central bank */
-    bytes32 public centralBank;
-
-    function setCentralBank(bytes32 _stashName) onlyOwner {
-        centralBank = _stashName;
-    }
-    modifier onlyCentralBank() {require(acc2stash[msg.sender] == centralBank);
-        _;}
-
-    /* Suspend bank / stash */
-    mapping(bytes32 => bool) public suspended;
-
-    function suspendStash(bytes32 _stashName) onlyOwner {
-        suspended[_stashName] = true;
-    }
-
-    function unSuspendStash(bytes32 _stashName) onlyOwner {
-        suspended[_stashName] = false;
-    }
-
-    //modifier notSuspended(bytes32 _stashName) { require(suspended[_stashName] == false); _; }
-
-    event statusCode(int errorCode); // statusCode added to handle returns upon exceptions - Laks
-
-    // workaround to handle exception as require/throw do not return errors - need to refactor - Laks
-    modifier notSuspended(bytes32 _stashName) {
-        if (suspended[_stashName]) {
-            statusCode(100);
-            return;
-        }
-        _;
+        bank = Bank(_bank);
     }
 
     /* payments */
@@ -311,7 +224,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         bytes32[] _notDoneStashes)
     {
         if (checkOwnedStash(acc2stash[resolveSequence[current]]) &&
-            !(acc2stash[resolveSequence[current]] != centralBank && isCentralBankNode())) {
+            !(acc2stash[resolveSequence[current]] != bank.centralBank() && isCentralBankNode())) {
             if (!committed) throw;
             else committed = false;
             if (checkOwnedStash(acc2stash[resolveSequence[current]])) {
@@ -338,12 +251,10 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         int _express, bool _putInQueue, bytes16 _salt)
     isPositive(_amount)
     isInvoled(_sender, _receiver)
-    notSuspended(_sender)
-    notSuspended(_receiver)
+//    notSuspended(_sender)
+//    notSuspended(_receiver)
     {
         //JMR
-        /* Stash sender = Stash(stashRegistry[_sender]); */
-        /* Stash receiver = Stash(stashRegistry[_receiver]); */
         Pmt memory pmt = Pmt(_txRef,
             _sender,
             _receiver,
@@ -358,8 +269,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
 
         //update positions
         sf.updatePosition(_sender, _receiver, _amount);
-        //    Stash(stashRegistry[_sender]).dec_position(_amount);
-        //    Stash(stashRegistry[_receiver]).inc_position(_amount);
 
         if (_putInQueue) {
             if (checkOwnedStash(_sender)) {
@@ -515,7 +424,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         lastResolveTime = now;
         bytes32 currentStash = acc2stash[resolveSequence[current]];
         if (!checkOwnedStash(currentStash)) {return false;}
-        if (currentStash != centralBank && isCentralBankNode()) {return false;}
+        if (currentStash != bank.centralBank() && isCentralBankNode()) {return false;}
         for (uint i = 0; i < gridlockQueue.length; i++) {
             Pmt inflow = payments[gridlockQueue[i]];
             GridlockedPmt g_inflow = globalGridlockQueue[inflow.txRef];
@@ -652,7 +561,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
             Deadlock();
             /* maxQueueDepth += 5; // prevent recursive gridlock */
         } else if (isNettingParticipant()) {
-            currentSalt = nettingSalt;
+            bank.updateCurrentSalt2NettingSalt();
         }
         gridlockQueue.length = numGridlockedPmts;
         nextState();
@@ -678,7 +587,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
             payments[_txRef].amount,
             msg.sender);
         payments[_txRef].state = PmtState.Confirmed;
-        currentSalt = payments[_txRef].salt;
+        bank.updateCurrentSalt(payments[_txRef].salt);
     }
 
     function checkOwnedStash(bytes32 _stashName) view private returns(bool){
@@ -714,8 +623,8 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     onlySender(_txRef)
     {
 
-        if (suspended[payments[_txRef].sender]) {
-            statusCode(600);
+        if (bank.isSuspended(payments[_txRef].sender)) {
+            bank.emitStatusCode(600);
             return;
         }
 
@@ -767,8 +676,8 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     onlySender(_txRef)
     {
 
-        if (suspended[payments[_txRef].sender]) {
-            statusCode(700);
+        if (bank.isSuspended(payments[_txRef].sender)) {
+            bank.emitStatusCode(700);
             return;
         }
         require(payments[_txRef].state == PmtState.Pending);
@@ -794,8 +703,8 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     atState(AgentState.Normal)
     onlySender(_txRef)
     {
-        if (suspended[payments[_txRef].sender]) {
-            statusCode(800);
+        if (bank.isSuspended(payments[_txRef].sender)) {
+            bank.emitStatusCode(800);
             return;
         }
         require(payments[_txRef].state == PmtState.Onhold);
@@ -835,35 +744,6 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         }
     }
     ///////////////////////////////////////////////////////////////////
-
-    /* @live:
-       privateFor == MAS and owner node
-
-       This method is set to onlyonwer as pledge include off-chain process
-    */
-    function pledge(bytes32 _txRef, bytes32 _stashName, int _amount)
-        // onlyCentralBank
-    notSuspended(_stashName)
-    {
-        if (_stashName != centralBank || isCentralBankNode()) {
-            sf.credit(_stashName, _amount);
-
-            pledgeAgent.pledge(_txRef, _stashName, _amount);
-        }
-    }
-
-    /* @live:
-       privateFor = MAS and owner node */
-    function redeem(bytes32 _txRef, bytes32 _stashName, int _amount)
-        //onlyCentralBank
-    notSuspended(_stashName)
-    {
-        if (_stashName != centralBank || isCentralBankNode()) {
-            sf.debit(_stashName, _amount);
-
-            redeemAgent.redeem(_txRef, _stashName, _amount);
-        }
-    }
 
     /* UBIN-153 insert into queue based on priority level */
     function enqueue(bytes32 _txRef, int _express) internal {
@@ -921,7 +801,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     }
 
     function getOwnedStash() view returns (bytes32) {
-        if (isCentralBankNode()) return centralBank;
+        if (isCentralBankNode()) return bank.centralBank();
         return sf.getOwnedStash();
     }
 
@@ -1001,11 +881,11 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     function updatePriority(bytes32 _txRef, int _express) {
         var (i,found) = ArrayIndexOf(pmtIdx, _txRef);
         if (!found) {
-            statusCode(300);
+            bank.emitStatusCode(300);
             return;
         }
-        if (suspended[payments[_txRef].sender]) {
-            statusCode(400);
+        if (bank.isSuspended(payments[_txRef].sender)) {
+            bank.emitStatusCode(400);
             return;
         }
         require(payments[_txRef].express != _express);
@@ -1128,6 +1008,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
         pmtIdx.length = 0;
         agentState = AgentState.Normal;
         sf.clear();
+        bank.clear();
         resolveSequence.length = 0;
         current = 0;
     }

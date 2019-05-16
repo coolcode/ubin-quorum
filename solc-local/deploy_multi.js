@@ -48,4 +48,5 @@ deploy_contract('StashFactory');
 deploy_contract('SGDz');
 deploy_contract('PledgeAgent');
 deploy_contract('RedeemAgent');
+deploy_contract('Bank');
 deploy_contract('GridlockQueue');

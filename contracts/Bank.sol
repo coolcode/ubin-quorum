@@ -2,7 +2,6 @@ pragma solidity ^0.4.11;
 
 import "./Owned.sol";
 import "./Stash.sol";
-import "./SGDz.sol";
 import "./StashFactory.sol";
 import "./RedeemAgent.sol";
 import "./PledgeAgent.sol";
@@ -66,6 +65,14 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         nettingSalt = _salt;
     }
 
+    function updateCurrentSalt2NettingSalt() external{
+        currentSalt = nettingSalt;
+    }
+
+    function updateCurrentSalt(bytes16 salt) external{
+        currentSalt = salt;
+    }
+
     // @pseudo-public, all the banks besides cb will not execute this action
     function setCentralBankCurrentSalt(bytes16 _salt) onlyCentralBank {
         if (isCentralBankNode()) {
@@ -84,6 +91,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
     function setCentralBank(bytes32 _stashName) onlyOwner {
         centralBank = _stashName;
     }
+
     modifier onlyCentralBank() {require(acc2stash[msg.sender] == centralBank);
         _;}
 
@@ -98,27 +106,26 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         suspended[_stashName] = false;
     }
 
+    function isSuspended(bytes32 _stashName) external returns(bool){
+        return suspended[_stashName];
+    }
+
     //modifier notSuspended(bytes32 _stashName) { require(suspended[_stashName] == false); _; }
 
     event statusCode(int errorCode); // statusCode added to handle returns upon exceptions - Laks
 
+    function emitStatusCode(int errorCode){
+        emit statusCode(errorCode);
+    }
+
     // workaround to handle exception as require/throw do not return errors - need to refactor - Laks
     modifier notSuspended(bytes32 _stashName) {
         if (suspended[_stashName]) {
-            statusCode(100);
+            emitStatusCode(100);
             return;
         }
         _;
     }
-
-    /* payments */
-    modifier isPositive(int _amount) {if (_amount <= 0) throw;
-        _;}
-    modifier isInvoled(bytes32 _sender, bytes32 _receiver) {
-        if (!checkOwnedStash(_sender) && !checkOwnedStash(_receiver)) throw;
-        _;
-    }
-
 
     /* @live:
        privateFor == MAS and owner node
@@ -163,7 +170,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         return sf.isCentralBankNode();
     }
 
-    function clear() {
-        sf.clear();
+    function clear() external{
+
     }
 }
