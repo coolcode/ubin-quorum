@@ -16,10 +16,10 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
     RedeemAgent public redeemAgent;
     PledgeAgent public pledgeAgent;
 
-    function setExternalContracts(address _sf, address _ra, address _pa) onlyOwner {
+    function setExternalContracts(address _sf, address _pa, address _ra) onlyOwner {
         sf = StashFactory(_sf);
-        redeemAgent = RedeemAgent(_ra);
         pledgeAgent = PledgeAgent(_pa);
+        redeemAgent = RedeemAgent(_ra);
     }
 
     /* salt tracking */

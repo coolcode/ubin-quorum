@@ -5,6 +5,11 @@
       "url": "http://localhost:7545",
       "accounts": ["0xB576be4b7135915F4c4465Bf021215DCE5f123D6", "0x291B861cbc11ff958B8Bb98d1f9E707EddD1fD1F", "0xe6C2Bb2fE8375c620e73E1B485964e4A3ec49516"],
       "contracts": {
+        "SGDz": "0x7fff4c67c89596eA36e8D187cB2B31a2e6DEc287",
+        "StashFactory": "0xDeD0EA42853520793b64705968a7fBf53A523c38",
+        "PledgeAgent": "0xE0A1c714272EE6f550D4b5A75419826CA83010fa",
+        "RedeemAgent": "0x98b6CDc90a42ef5e4B9423aa5Dc23f31fc79a32A",
+        "Bank": "0x0F1c118ac83368F473DddE3EB8a9165c3BF56b7d"
       }
     },
     "quorum": {

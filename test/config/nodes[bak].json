@@ -167,5 +167,18 @@
     "centralBank": false,
     "regulator": false,
     "localport": 3000
+  },
+  {
+    "nodeId": 14,
+    "host": "3.216.212.77",
+    "port": 22014,
+    "accountNumber": 0,
+    "ethKey": "0xc42d45b417c27cb7cb449d67c49c1b5f96e1c4a4",
+    "constKey": "/9i47CLxRhVgJZdBugd5SJX76yqTOMpjf1ivheD4IE8=",
+    "stashName": "XXX",
+    "enode": "8b7f9185b3e365bfe4f5aab1ddc461f7a1fb3ad4e06e50ebb4a7a27ca4796155c3543e142eb809b99dfbd6b43c59ac38620bb231f458849cbaef68a858bd7c05",
+    "centralBank": false,
+    "regulator": false,
+    "localport": 3000
   }
 ]

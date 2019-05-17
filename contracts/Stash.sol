@@ -25,7 +25,7 @@ contract Stash is Owned {
   }
 
   function safe_debit(int _dAmt) onlyOwner {
-    if (_dAmt > balance) throw;
+    require (_dAmt <= balance, "debit amount < balance");
     balance -= _dAmt;
   }
 

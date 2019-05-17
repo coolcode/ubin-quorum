@@ -19,6 +19,7 @@ export default class BlockService {
         this.contracts = {};
         //this.loadContracts();
         this.defaultGas = "204800000";
+        this.log_level = "info";
     }
 
     loadOption() {
@@ -36,18 +37,18 @@ export default class BlockService {
     }
 
     async deployContracts() {
-        console.log("names:", this.names);
+        this.log(`names: ${ this.names}`);
         for (let i = 0; i < this.names.length; i++) {
             await this.deployContract(this.names[i]);
         }
 
         const r = await this.Bank.setExternalContracts(this.StashFactory.address, this.PledgeAgent.address, this.RedeemAgent.address).send({from: this.owner, gas: this.defaultGas});
-        console.log(`set bank's external contracts. tx hash: `, r.transactionHash);
+        this.log(`set bank's external contracts. tx hash: ${r.transactionHash}`);
     }
 
 
     async deployContract(name) {
-        console.log(`deploying "${name}"...`);
+        this.log(`deploying "${name}"...` , 'debug');
         const sgdz_compiled = JSON.parse(fs.readFileSync(`../build/contracts/${name}.json`, 'utf8'));
 
         const receipt = await this.deployAgent({
@@ -58,9 +59,9 @@ export default class BlockService {
         });
 
         const contractAddress = receipt.contractAddress;
-        console.log(`addr:`, contractAddress);
+        this.log(`addr: ${contractAddress}` , 'debug');
         const contract = this.loadContract(name, sgdz_compiled["abi"], contractAddress);
-        console.log(`"${name}": "${contract.address}",`);
+        this.log(`"${name}": "${contract.address}",`);
         // fs.writeFile('config/' + name + '_Address', contract.address,
         //     err => {
         //         if (err) console.log(err);
@@ -81,10 +82,10 @@ export default class BlockService {
                     reject(error);
                     return;
                 }
-                console.log("tx hash: ", hash);
+                self.log(`tx hash: ${hash}` , 'debug');
                 await self.confirmTx(hash);
                 //resolve(hash);
-                console.log("confirmed: ", hash);
+                self.log(`confirmed: ${hash}` , 'debug');
                 const receipt = await self.getReceipt(hash);
                 //console.log("receipt: ", receipt);
                 resolve(receipt);
@@ -142,7 +143,7 @@ export default class BlockService {
                 break;
             }
         }
-        //console.log(`load '${event}' event data!. items:`, items);
+        //this.log(`load '${event}' event data!. items:`, items);
         return items;
     }
 
@@ -162,11 +163,11 @@ export default class BlockService {
         while (i++ < 100) {
             const trxConfirmations = await this.getConfirmations(txHash);
             if (trxConfirmations >= confirmations) {
-                console.log('Transaction with hash ' + txHash + ' has been successfully confirmed');
+                this.log('Transaction with hash ' + txHash + ' has been successfully confirmed', 'debug');
                 const trx = await this.web3.eth.getTransaction(txHash);
                 return trx;
             }
-            console.log(`waiting confirmation: ${i * 2}s`);
+            this.log(`waiting confirmation: ${i * 2}s`, 'debug');
             await util.sleep(2 * 1000);
         }
     }
@@ -178,7 +179,7 @@ export default class BlockService {
                 return -2;
             }
             const currentBlock = await this.web3.eth.getBlockNumber();
-            //console.log("trx.blockNumber",trx.blockNumber);
+            //this.log("trx.blockNumber",trx.blockNumber);
             return trx.blockNumber === null ? -1 : (currentBlock - trx.blockNumber) + 1
         }
         catch (error) {
@@ -203,6 +204,12 @@ export default class BlockService {
     byte2string(value) {
         return this.web3.utils.toAscii(value);
     }
+
+    log(str, level){
+       if(!level || level == this.log_level){
+           console.log(str);
+       }
+    }
 }
 
 export class MethodProxy {
@@ -224,11 +231,11 @@ export class MethodProxy {
                     reject(error);
                     return;
                 }
-                console.log("hash: ", hash);
+                self.bs.log(`tx hash: ${hash}` , 'debug');
                 await self.bs.confirmTx(hash);
-                console.log("confirmed: ", hash);
+                //resolve(hash);
+                self.bs.log(`confirmed: ${hash}` , 'debug');
                 const receipt = await self.bs.getReceipt(hash);
-                //console.log("receipt: ", receipt);
                 resolve(receipt);
             });
         });
@@ -260,10 +267,10 @@ export class ContractProxy {
                     return this[name];
                 }
 
-                //console.log(`ContractProxy target: ${target}, name: ${name}`);
+                //this.log(`ContractProxy target: ${target}, name: ${name}`);
                 function ContractMethod() {
                     let methodArguments = [...arguments];
-                    //console.log(methodArguments);
+                    //this.log(methodArguments);
                     return new MethodProxy(bs, this.web3methods[name], methodArguments);
                 }
 
