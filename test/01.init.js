@@ -1,4 +1,5 @@
 import BlockService, {util} from "./BlockService";
+import u from "./u";
 import nodes from "./config/nodes[local].json";
 
 async function _main(){
@@ -8,14 +9,16 @@ async function _main(){
 
     for(let i=0;i<nodes.length;i++) {
         const stashName = nodes[i].stashName;
+        const stashNameBytes = bs.string2byte(stashName);
         const ethKey = nodes[i].ethKey;
         const isCentralBank = nodes[i].centralBank;
-        await bs.StashFactory.createStash(stashName).send();
-        util.colorLog("\tRegistering stash for " + stashName, 'a');
-        await bs.Bank.registerStash(ethKey, stashName).send();
-        await bs.StashFactory.markStash(stashName);
+        u.colorLog("Creating " + stashName, 'a');
+        await bs.StashFactory.createStash(stashNameBytes).send();
+        u.colorLog("Registering stash for " + stashName, 'a');
+        await bs.Bank.registerStash(ethKey, stashNameBytes).send();
+        await bs.StashFactory.markStash(stashNameBytes);
         if (isCentralBank) {
-            bs.Bank.setCentralBank(stashName);
+            bs.Bank.setCentralBank(stashNameBytes);
         }
     }
 

@@ -49,14 +49,6 @@ export default class BlockService {
     async deployContract(name) {
         console.log(`deploying "${name}"...`);
         const sgdz_compiled = JSON.parse(fs.readFileSync(`../build/contracts/${name}.json`, 'utf8'));
-        //const web3Contract = new this.web3.eth.Contract(sgdz_compiled["abi"]);
-        /*, null, {
-            data: sgdz_compiled["bytecode"],
-            from: this.owner,
-            gas: this.defaultGas
-        }*/
-        //const deployAgent = new MethodProxy(this, web3Contract.deploy, );
-        //const self = this;
 
         const receipt = await this.deployAgent({
             abi: sgdz_compiled["abi"],
@@ -65,7 +57,6 @@ export default class BlockService {
             gas: this.defaultGas
         });
 
-        //const receipt = await this.getReceipt(transactionHash);
         const contractAddress = receipt.contractAddress;
         console.log(`addr:`, contractAddress);
         const contract = this.loadContract(name, sgdz_compiled["abi"], contractAddress);
@@ -77,7 +68,7 @@ export default class BlockService {
 
         //return contract;
         return true;
-    };
+    }
 
     deployAgent(opt) {
         const {abi, data, from, gas} = opt;
@@ -203,6 +194,14 @@ export default class BlockService {
         catch (error) {
             console.error(error);
         }
+    }
+
+    string2byte(value) {
+        return this.web3.utils.fromAscii(value);
+    }
+
+    byte2string(value) {
+        return this.web3.utils.toAscii(value);
     }
 }
 
@@ -334,21 +333,4 @@ export const util = {
         return Object.values(value);
     },
 
-    colorLog: function (str, currentNetwork) {
-        if (currentNetwork == 'a') {
-            console.log(chalk.blue(str));
-        } else if (currentNetwork == 'b') {
-            console.log(chalk.green(str));
-        } else if (currentNetwork == 'c') {
-            console.log(chalk.magenta(str));
-        } else if (currentNetwork == 'd') {
-            console.log(chalk.red(str));
-        } else if (currentNetwork == 'e') {
-            console.log(chalk.yellow(str));
-        } else if (currentNetwork == 'f') {
-            console.log(chalk.cyan(str));
-        } else {
-            console.log(str);
-        }
-    }
 }
