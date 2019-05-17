@@ -15,7 +15,7 @@ export default class BlockService {
         };
         this.names = ["SGDz", "StashFactory", "PledgeAgent", "RedeemAgent", "Bank"];//, "StashFactory", "PledgeAgent", "RedeemAgent", "Bank"
         this.web3 = new Web3(this.opt.url);
-        this.owner = this.getDefaultAccounts()[0];
+        this.owner = this.getFirstAccount();
         this.contracts = {};
         //this.loadContracts();
         this.defaultGas = "204800000";
@@ -29,6 +29,10 @@ export default class BlockService {
     getDefaultAccounts() {
         return this.opt.accounts;
         //return await this.web3.eth.getAccounts();
+    }
+
+    getFirstAccount() {
+        return this.getDefaultAccounts()[0];
     }
 
     async deployContracts() {
@@ -211,6 +215,9 @@ export class MethodProxy {
 
     send(p) {
         let self = this;
+        if (p === undefined) {
+            p = {from: self.bs.owner, gas: self.bs.defaultGas};
+        }
         return new Promise(function (resolve, reject) {
             self.web3method(...self.methodArguments).send(p, async (error, hash) => {
                 if (error) {
@@ -268,48 +275,48 @@ export class ContractProxy {
 }
 
 
-export class util {
-    static sleep(ms) {
+export const util = {
+    sleep: function (ms) {
         return new Promise((resolve, reject) => setTimeout(resolve, ms));
-    }
+    },
 
-    static wei2eth(value, digits) {
+    wei2eth: function (value, digits) {
         let _15x = new BN("1000000000000000", 10);
         let _r3 = util.bn(value).div(_15x).toString(10);
         let r = parseInt(_r3) / 1000;
 
         return r.toFixed(digits || 2);
-    }
+    },
 
-    static eth2wei(value) {
+    eth2wei: function (value) {
         let _18x = new BN("1000000000000000000", 10);
         let r = util.bn(value).mul(_18x).toString(10);
         return r;
-    }
+    },
 
-    static wei2token(value) {
+    wei2token: function (value) {
         let _18x = new BN("1000000000000000000", 10);
         let r = util.bn(value).div(_18x).toString(10);
         return parseFloat(r).toFixed();
-    }
+    },
 
-    static bn2string(value) {
+    bn2string: function (value) {
         return util.bn(value).toString(10);
-    }
+    },
 
-    static bn2int(value) {
+    bn2int: function (value) {
         return parseInt(util.bn2string(value));
-    }
+    },
 
-    static bn2float(value) {
+    bn2float: function (value) {
         return parseFloat(util.bn2string(value));
-    }
+    },
 
-    static bn2time(v) {
+    bn2time(v) {
         return new Date(util.bn2float(v) * 1000);
-    }
+    },
 
-    static bn(value) {
+    bn: function (value) {
         if (!value) {
             return new BN(0, 10);
         }
@@ -321,9 +328,27 @@ export class util {
             return new BN(value.toString(), 10);
         }
         return new BN(value);
-    }
+    },
 
-    static array(v) {
-        return Object.values(v);
+    array: function (value) {
+        return Object.values(value);
+    },
+
+    colorLog: function (str, currentNetwork) {
+        if (currentNetwork == 'a') {
+            console.log(chalk.blue(str));
+        } else if (currentNetwork == 'b') {
+            console.log(chalk.green(str));
+        } else if (currentNetwork == 'c') {
+            console.log(chalk.magenta(str));
+        } else if (currentNetwork == 'd') {
+            console.log(chalk.red(str));
+        } else if (currentNetwork == 'e') {
+            console.log(chalk.yellow(str));
+        } else if (currentNetwork == 'f') {
+            console.log(chalk.cyan(str));
+        } else {
+            console.log(str);
+        }
     }
 }

@@ -1,0 +1,15 @@
+[
+  {
+    "nodeId": 1,
+    "host": "127.0.0.1",
+    "port": 7545,
+    "accountNumber": 0,
+    "ethKey": "0xB576be4b7135915F4c4465Bf021215DCE5f123D6",
+    "constKey": "QBj8GITWJkPkekxNPzZacPj12rWHPatyLSW6/4JKM1A=",
+    "stashName": "MASREGULATOR",
+    "enode": "d2536a694a69d5d2560962f92419159a12cb1ceeffe1b51e13c25a7fe5059a1e8ca8968199409a245fa62cd5183f8770682a21cf89f50a970b4664090b0fe0c8",
+    "centralBank": false,
+    "regulator": true,
+    "localport": 3000
+  }
+]
