@@ -1,4 +1,4 @@
-/* pragma solidity ^0.4.11; */
+/* pragma solidity ^0.4.24; */
 
 // Copyright 2017 Zerocoin Electric Coin Company LLC
 //

@@ -1,5 +1,5 @@
 {
-  "env": "local",
+  "env": "quorum2",
   "networks": {
     "local": {
       "url": "http://localhost:7545",
@@ -15,6 +15,12 @@
     "quorum": {
       "url": "http://3.216.212.77:21001",
       "accounts": ["", "", ""],
+      "contracts": {
+      }
+    },
+    "quorum2": {
+      "url": "http://3.211.248.180:22222",
+      "accounts": ["0x6376bc0992CC4BD659AA37A077A24AF1c70fC873", "", ""],
       "contracts": {
       }
     }
