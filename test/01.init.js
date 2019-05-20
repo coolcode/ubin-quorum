@@ -20,10 +20,10 @@ async function _main() {
         const ethKey = nodes[i].ethKey;
         const isCentralBank = nodes[i].centralBank;
         u.colorLog("Creating " + stashName, currentNetwork);
-        await bs.StashFactory.createStash(stashNameBytes).send();
+        await bs.StashFactory.createStash(stashName).send();
         u.colorLog("Registering stash for " + stashName, currentNetwork);
-        await bs.Bank.registerStash(ethKey, stashNameBytes).send();
-        await bs.StashFactory.markStash(stashNameBytes);
+        await bs.Bank.registerStash(ethKey, stashName).send();
+        await bs.StashFactory.markStash(stashName);
         if (isCentralBank) {
             bs.Bank.setCentralBank(stashNameBytes);
         }

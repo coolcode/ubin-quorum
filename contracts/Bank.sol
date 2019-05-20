@@ -27,11 +27,16 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
     bytes16 public nettingSalt; // used to cache result salt after LSM calculation
 
     mapping(address => bytes32) public acc2stash; // @pseudo-public
-    function registerStash(address _acc, bytes32 _stashName) onlyOwner {
+
+    function registerStash(address _acc, string _stashName) onlyOwner {
+        _registerStash(_acc, stringToBytes32(_stashName));
+    }
+
+    function _registerStash(address _acc, bytes32 _stashName) onlyOwner {
         acc2stash[_acc] = _stashName;
     }
 
-    function getStash(address _acc) view returns(bytes32){
+    function getStash(address _acc) view returns (bytes32){
         return acc2stash[_acc];
     }
 
@@ -69,11 +74,11 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         nettingSalt = _salt;
     }
 
-    function updateCurrentSalt2NettingSalt() external{
+    function updateCurrentSalt2NettingSalt() external {
         currentSalt = nettingSalt;
     }
 
-    function updateCurrentSalt(bytes16 salt) external{
+    function updateCurrentSalt(bytes16 salt) external {
         currentSalt = salt;
     }
 
@@ -89,7 +94,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         return currentSalt;
     }
 
-        /* set up central bank */
+    /* set up central bank */
     bytes32 public centralBank;
 
     function setCentralBank(bytes32 _stashName) onlyOwner {
@@ -110,7 +115,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         suspended[_stashName] = false;
     }
 
-    function isSuspended(bytes32 _stashName) external returns(bool){
+    function isSuspended(bytes32 _stashName) external returns (bool){
         return suspended[_stashName];
     }
 
@@ -160,7 +165,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         }
     }
 
-    function checkOwnedStash(bytes32 _stashName) view private returns(bool){
+    function checkOwnedStash(bytes32 _stashName) view private returns (bool){
         return sf.checkOwnedStash(_stashName, msg.sender);
     }
 
@@ -174,7 +179,7 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         return sf.isCentralBankNode();
     }
 
-    function clear() external{
+    function clear() external {
 
     }
 }

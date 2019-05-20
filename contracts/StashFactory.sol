@@ -11,16 +11,26 @@ contract StashFactory is Owned {
     mapping(bytes32 => address) public stashRegistry;
 
     /* @pseudo-public */
-    function createStash(bytes32 _stashName) onlyOwner returns (bool){
+    function createStash(string _stashName) onlyOwner returns (bool){
+        return _createStash(stringToBytes32(_stashName));
+    }
+
+    function getStash(string _stashName) onlyOwner view returns (address){
+        return stashRegistry[stringToBytes32(_stashName)];
+    }
+
+    function _createStash(bytes32 _stashName) onlyOwner returns (bool){
         address stash = new Stash(_stashName);
         stashRegistry[_stashName] = stash;
         stashNames.push(_stashName);
         return true;
     }
 
-    /* @depolyment:
-       privateFor = MAS and owner node */
-    function markStash(bytes32 _stashName) onlyOwner {
+    function markStash(string _stashName) onlyOwner {
+        _markStash(stringToBytes32(_stashName));
+    }
+
+    function _markStash(bytes32 _stashName) onlyOwner {
         Stash stash = Stash(stashRegistry[_stashName]);
         stash.mark();
     }
