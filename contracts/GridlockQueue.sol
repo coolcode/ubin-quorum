@@ -65,7 +65,7 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     function getOutgoingQueueDepth(bytes32 _sender) view returns (uint) {
         uint result = 0;
         for (uint i = 0; i < gridlockQueue.length; ++i) {
-            if (payments[gridlockQueue[i]].sender == bank._getStash(_sender)) {
+            if (payments[gridlockQueue[i]].sender == _sender) {
                 result++;
             }
         }
