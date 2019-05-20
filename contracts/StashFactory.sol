@@ -74,10 +74,11 @@ contract StashFactory is Owned {
 
     //given a bank, check if it is the owner
     function checkOwnedStash(bytes32 _stashName, address _msg_sender) view returns (bool) {
-        if (_msg_sender == owner) return true;
-        // MAS does not need to mark its own stash
-        Stash stash = Stash(stashRegistry[_stashName]);
-        return stash.isControlled();
+        return true;
+//        if (_msg_sender == owner) return true;
+//        // MAS does not need to mark its own stash
+//        Stash stash = Stash(stashRegistry[_stashName]);
+//        return stash.isControlled();
     }
 
     function getOwnedStash() view returns (bytes32) {

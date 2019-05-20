@@ -13,7 +13,7 @@ export default class BlockService {
             "Bank": Bank.abi,
             "SGDz": SGDz.abi,
         };
-        this.names = ["SGDz", "StashFactory", "PledgeAgent", "RedeemAgent", "Bank"];//, "StashFactory", "PledgeAgent", "RedeemAgent", "Bank"
+        this.names = ["SGDz", "StashFactory", "PledgeAgent", "RedeemAgent", "Bank", "GridlockQueue"];//, "StashFactory", "PledgeAgent", "RedeemAgent", "Bank"
         this.web3 = new Web3(this.opt.url);
         this.owner = this.getFirstAccount();
         this.contracts = {};
@@ -42,8 +42,14 @@ export default class BlockService {
             await this.deployContract(this.names[i]);
         }
 
-        const r = await this.Bank.setExternalContracts(this.StashFactory.address, this.PledgeAgent.address, this.RedeemAgent.address).send({from: this.owner, gas: this.defaultGas});
-        this.log(`set bank's external contracts. tx hash: ${r.transactionHash}`);
+        const r1 = await this.Bank.setExternalContracts(this.StashFactory.address, this.PledgeAgent.address, this.RedeemAgent.address)
+            .send({from: this.owner, gas: this.defaultGas});
+        this.log(`set bank's external contracts. tx hash: ${r1.transactionHash}`);
+
+        const r2 = await this.GridlockQueue.setExternalContracts(this.StashFactory.address, this.SGDz.address, this.Bank.address)
+            .send({from: this.owner, gas: this.defaultGas});
+        this.log(`set GridlockQueue's external contracts. tx hash: ${r2.transactionHash}`);
+
     }
 
 
