@@ -31,6 +31,7 @@ async function _main() {
 
     let saltStr = "cb06bf108dd249884188983c75186512";
     let salt = saltStr.lpad("0", 32);
+    console.log("salt:", salt);
     const bals = [2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 1000, 1200, 1400, 1500];
     for (let bankIdx = 0; bankIdx < bals.length; bankIdx++) {
         let bal = bals[bankIdx];
@@ -59,9 +60,12 @@ async function _main() {
     u.colorLog("Setting GridlockQueue's threshold to " + threshold + "...", currentNetwork);
 
     const submitPmt = async (_txRef, s_index, r_index, amount, express, directQueue_index) => {
-        const txRef = bs.string2byte(_txRef);
-        const sender = bs.string2byte(nodes[s_index].stashName);
-        const receiver = bs.string2byte(nodes[r_index].stashName);
+        // const txRef = bs.string2byte(_txRef);
+        // const sender = bs.string2byte(nodes[s_index].stashName);
+        // const receiver = bs.string2byte(nodes[r_index].stashName);
+        const txRef = (_txRef);
+        const sender = (nodes[s_index].stashName);
+        const receiver = (nodes[r_index].stashName);
         const directQueue = directQueue_index === 1 ? true : false;
         await bs.GridlockQueue.submitPmt(txRef, sender, receiver, amount, express, directQueue, "0x" + salt).send();
 

@@ -242,7 +242,15 @@ contract GridlockQueue is Owned {// Regulator node (MAS) should be the owner
     // timestamp is created onchain now - Zekun
     event Payment(bytes32 txRef, bool gridlocked, bool confirmPmt);
 
-    function submitPmt(bytes32 _txRef, bytes32 _sender, bytes32 _receiver, int _amount,
+    function submitPmt(string _txRef, string _sender, string _receiver, int _amount,
+        int _express, bool _putInQueue, string _salt)
+    {
+        return _submitPmt(stringToBytes32(_txRef), stringToBytes32(_sender), stringToBytes32(_receiver),
+    _amount, _express, _putInQueue, stringToBytes16(_salt));
+    }
+
+
+    function _submitPmt(bytes32 _txRef, bytes32 _sender, bytes32 _receiver, int _amount,
         int _express, bool _putInQueue, bytes16 _salt)
     isPositive(_amount)
     isInvoled(_sender, _receiver)
