@@ -36,7 +36,11 @@ contract Bank is Owned {// Regulator node (MAS) should be the owner
         acc2stash[_acc] = _stashName;
     }
 
-    function getStash(address _acc) view returns (bytes32){
+    function getStash(address _acc) view returns (string){
+        return bytes32ToString(_getStash(_acc));
+    }
+
+    function _getStash(address _acc) view returns (bytes32){
         return acc2stash[_acc];
     }
 
